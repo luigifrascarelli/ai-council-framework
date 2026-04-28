@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI CoE Framework · Solutions CoE FY27</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#032D60;--navy2:#063A7A;--navy3:#0A4A96;
+  --blue:#0D9DDA;--blue2:#1B96FF;--blue3:#003A6B;
+  --light:#E4F4FF;--lighter:#F0F8FF;--border:#C8E3F5;
+  --purple:#4A2EC0;--purple-bg:#EDE9FF;--purple-border:#9B7FE8;
+  --amber:#B05C00;--amber-bg:#FFF4D6;--amber-border:#E8A24A;
+  --green:#0F6E56;--green-bg:#E1F5EE;--green-border:#5DCAA5;
+  --text:#032D60;--muted:#5A8AB0;--white:#fff;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#EFF7FF;color:var(--text);display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+aside{width:220px;min-width:220px;background:var(--navy);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo svg{display:block;margin-bottom:10px}
+.sb-title{font-size:13px;font-weight:700;color:#fff;line-height:1.3}
+.sb-sub{font-size:10px;color:#8CCFFE;margin-top:3px;letter-spacing:.04em;text-transform:uppercase}
+nav{padding:12px 0;flex:1}
+.nav-section{padding:6px 20px 4px;font-size:9px;font-weight:700;color:rgba(140,207,254,.5);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:12px;color:rgba(255,255,255,.65);text-decoration:none;transition:all .15s;border-left:2px solid transparent;cursor:pointer}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-link.active{color:#fff;background:rgba(13,157,218,.15);border-left-color:var(--blue)}
+.nav-link .nl-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.08);font-size:10px;color:rgba(140,207,254,.5)}
+
+/* ── MAIN ── */
+main{flex:1;min-width:0;overflow-y:auto;padding:32px 36px}
+
+/* ── SECTIONS ── */
+.page-section{margin-bottom:48px;scroll-margin-top:16px}
+.sec-eyebrow{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.2}
+.sec-desc{font-size:13px;color:var(--muted);line-height:1.65;max-width:680px;margin-bottom:24px}
+.divider{height:1px;background:var(--border);margin-bottom:28px}
+
+/* ── HERO STRIP ── */
+.hero{background:var(--navy);border-radius:14px;padding:28px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:20px}
+.hero-text .ht-title{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.hero-text .ht-sub{font-size:11px;color:#8CCFFE;text-transform:uppercase;letter-spacing:.07em}
+.hero-kpis{display:flex;gap:12px}
+.hkpi{background:rgba(255,255,255,.08);border-radius:10px;padding:14px 20px;text-align:center;border-top:3px solid}
+.hkpi .hk-val{font-size:28px;font-weight:700;color:#fff;line-height:1}
+.hkpi .hk-lbl{font-size:9px;color:#8CCFFE;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;font-weight:600}
+
+/* ── CARDS ── */
+.card{background:#fff;border-radius:12px;border:1px solid var(--border);padding:20px 22px}
+.card-sm{background:#fff;border-radius:10px;border:1px solid var(--border);padding:14px 16px}
+.card-dark{background:var(--navy2);border-radius:12px;border:1px solid rgba(255,255,255,.08);padding:20px 22px}
+
+/* ── COUNCIL STRUCTURE ── */
+.council-tier{margin-bottom:8px}
+.council-tier-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;padding-left:2px}
+.council-row{display:flex;gap:8px}
+.council-card{flex:1;border-radius:10px;padding:14px 16px;border:1px solid}
+.cc-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.cc-title{font-size:13px;font-weight:700;margin-bottom:5px}
+.cc-desc{font-size:11px;line-height:1.5;margin-bottom:8px}
+.cc-tags{display:flex;flex-wrap:wrap;gap:4px}
+.cc-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px}
+.tier-arrow{text-align:center;font-size:20px;color:var(--border);margin:4px 0;line-height:1}
+
+/* ── GRID LAYOUTS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+
+/* ── FUNCTION CARDS ── */
+.fn-card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:16px 18px;border-left:4px solid}
+.fn-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;display:inline-block;padding:2px 8px;border-radius:20px}
+.fn-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.fn-desc{font-size:11px;color:#3A5A80;line-height:1.55;margin-bottom:8px}
+.fn-who{font-size:10px;color:var(--muted)}
+.fn-who strong{color:var(--navy)}
+
+/* ── RACI TABLE ── */
+.raci-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table.raci{width:100%;border-collapse:collapse;font-size:11px;white-space:nowrap}
+table.raci th{background:var(--navy);color:#8CCFFE;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 10px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+table.raci th.th-fn{text-align:left;width:150px;background:#021A40;color:#8CCFFE}
+table.raci td{padding:8px 9px;border:1px solid #EBF4FF;text-align:center;vertical-align:middle;background:#fff}
+table.raci td.td-fn{text-align:left;background:#F7FBFF;padding-left:14px;font-weight:600;color:var(--navy);font-size:11px}
+table.raci td.td-fn small{display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:1px}
+table.raci tr:hover td{background:#F0F8FF}
+table.raci tr:hover td.td-fn{background:#E8F4FF}
+
+.r-own{background:var(--navy);color:#fff;font-size:9px;font-weight:700;border-radius:4px;display:inline-block;padding:2px 7px}
+.r-gate{background:#B05C00;color:#fff;font-size:9px;font-weight:700;border-radius:4px;display:inline-block;padding:2px 7px}
+.r-contrib{background:#D4EEFF;color:#003A6B;font-size:9px;font-weight:600;border-radius:4px;display:inline-block;padding:2px 7px}
+.r-consult{background:var(--purple-bg);color:var(--purple);font-size:9px;font-weight:600;border-radius:4px;display:inline-block;padding:2px 7px}
+.r-inform{background:#F0F0F4;color:#666;font-size:9px;font-weight:500;border-radius:4px;display:inline-block;padding:2px 7px}
+.r-nil{color:#DDD;font-size:11px}
+
+/* ── GOV STAGES ── */
+.stages{display:flex;gap:6px;align-items:stretch}
+.stage-box{flex:1;border-radius:10px;overflow:hidden;min-width:0}
+.stage-hdr{padding:12px 14px}
+.stage-num{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.stage-name{font-size:13px;font-weight:700}
+.stage-items{padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:6px;height:calc(100% - 52px)}
+.si{font-size:11px;padding:6px 10px;border-radius:6px;border-left:3px solid;line-height:1.4}
+.stage-arrow{display:flex;align-items:center;color:var(--border);font-size:20px;flex-shrink:0;align-self:center;padding-bottom:40px}
+
+/* ── TIMELINE ── */
+.tl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tl-col{border-radius:10px;overflow:hidden}
+.tl-hdr{padding:12px 16px}
+.tl-q{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+.tl-name{font-size:13px;font-weight:700}
+.tl-body{padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:6px}
+.tl-item{font-size:11px;padding:6px 10px;border-radius:6px;border-left:3px solid;line-height:1.4}
+
+/* ── SLACK ── */
+.slack-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.slack-card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:16px 18px}
+.slack-tier{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.ch{display:flex;gap:10px;align-items:flex-start;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #EEF5FB}
+.ch:last-child{padding-bottom:0;margin-bottom:0;border-bottom:none}
+.ch-hash{font-size:18px;font-weight:700;color:var(--blue);line-height:1;flex-shrink:0;margin-top:1px}
+.ch-name{font-size:12px;font-weight:700;color:var(--navy)}
+.ch-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.ch-pills{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.ch-pill{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--light);color:var(--blue3)}
+
+/* ── OVERLAP SECTION ── */
+.overlap-wrap{position:relative}
+.org-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.org-col{border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.org-hdr{padding:12px 14px;text-align:center}
+.org-hdr .org-abbr{font-size:16px;font-weight:700;margin-bottom:2px}
+.org-hdr .org-name{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8}
+.org-body{padding:10px 12px;background:#fff;display:flex;flex-direction:column;gap:5px}
+.org-item{font-size:10px;padding:5px 9px;border-radius:6px;border-left:2px solid;line-height:1.35}
+
+.overlap-matrix-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:16px}
+table.om{width:100%;border-collapse:collapse;font-size:11px}
+table.om th{background:var(--navy);color:#8CCFFE;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 12px;text-align:center;border:1px solid rgba(255,255,255,.06)}
+table.om th.th-area{text-align:left;width:160px;background:#021A40}
+table.om td{padding:9px 10px;border:1px solid #EBF4FF;text-align:center;background:#fff;vertical-align:middle}
+table.om td.td-area{text-align:left;background:#F7FBFF;font-weight:600;color:var(--navy);font-size:11px;padding-left:14px}
+table.om td.td-area small{display:block;font-weight:400;color:var(--muted);font-size:10px;margin-top:1px}
+table.om tr:hover td{background:#F0F8FF}
+table.om tr:hover td.td-area{background:#E8F4FF}
+
+.o-shared{background:#D4EEFF;color:#003A6B;font-size:9px;font-weight:700;border-radius:4px;display:inline-block;padding:2px 7px}
+.o-unique{background:#F0FFF8;color:#0F6E56;font-size:9px;font-weight:600;border-radius:4px;display:inline-block;padding:2px 7px;border:1px solid #5DCAA5}
+.o-partial{background:var(--amber-bg);color:var(--amber);font-size:9px;font-weight:600;border-radius:4px;display:inline-block;padding:2px 7px}
+.o-nil{color:#DDD;font-size:11px}
+
+/* ── CALLOUT ── */
+.callout{border-radius:8px;padding:12px 16px;font-size:12px;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+.callout-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.callout-amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:#4A2500}
+.callout-blue{background:var(--light);border:1px solid var(--border);color:var(--navy)}
+.callout-green{background:var(--green-bg);border:1px solid var(--green-border);color:#0A2A22}
+
+/* ── LEGEND STRIP ── */
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px;background:#F7FBFF;border-radius:8px;border:1px solid var(--border);margin-bottom:18px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--navy)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  aside{width:180px;min-width:180px}
+  .hero-kpis{display:none}
+  .grid-3,.grid-4,.tl-grid,.org-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside>
+  <div class="sb-logo">
+    <svg width="40" height="40" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+      <rect width="44" height="44" rx="9" fill="#1798C1"/>
+      <path d="M18.2 13.2c1.2-1.3 2.9-2.1 4.8-2.1 2.3 0 4.3 1.2 5.4 3 .7-.3 1.5-.5 2.3-.5 3.1 0 5.6 2.5 5.6 5.6 0 3.1-2.5 5.6-5.6 5.6-.4 0-.7 0-1.1-.1C28.7 26 27 27 25 27c-.6 0-1.1-.1-1.6-.3-.8 1.4-2.3 2.3-4 2.3-1.5 0-2.8-.7-3.7-1.7-.4.1-.8.1-1.2.1-2.8 0-5-2.2-5-5s2.2-5 5-5c.3 0 .5 0 .8.1.3-1.7 1.5-3.1 2.9-4.3z" fill="white"/>
+      <text x="22" y="36" text-anchor="middle" font-family="Arial" font-weight="700" font-size="6.5" fill="white" letter-spacing="0.3">salesforce</text>
+    </svg>
+    <div class="sb-title">AI CoE Framework</div>
+    <div class="sb-sub">Solutions CoE · FY27</div>
+  </div>
+
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a class="nav-link active" onclick="goTo('overview')"><span class="nl-icon">◈</span>Overview</a>
+
+    <div class="nav-section">Council</div>
+    <a class="nav-link" onclick="goTo('structure')"><span class="nl-icon">◉</span>Council Structure</a>
+    <a class="nav-link" onclick="goTo('functions')"><span class="nl-icon">⊞</span>Functions</a>
+
+    <div class="nav-section">Alignment</div>
+    <a class="nav-link" onclick="goTo('overlap')"><span class="nl-icon">⊛</span>Org Overlap</a>
+    <a class="nav-link" onclick="goTo('matrix')"><span class="nl-icon">⊟</span>RACI Matrix</a>
+
+    <div class="nav-section">Execution</div>
+    <a class="nav-link" onclick="goTo('governance')"><span class="nl-icon">⊕</span>Governance</a>
+    <a class="nav-link" onclick="goTo('roadmap')"><span class="nl-icon">⊗</span>Roadmap</a>
+    <a class="nav-link" onclick="goTo('comms')"><span class="nl-icon">⊜</span>Comms & Slack</a>
+  </nav>
+
+  <div class="sb-footer">FY27 · Confidential<br>CoE Framework v2.3</div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main id="main-scroll">
+
+  <!-- OVERVIEW -->
+  <div class="page-section" id="overview">
+    <div class="hero">
+      <div class="hero-text">
+        <div class="ht-title">AI Center of Excellence</div>
+        <div class="ht-sub">Unified Council · Cross-Functional Governance · FY27</div>
+      </div>
+      <div class="hero-kpis">
+        <div class="hkpi" style="border-top-color:var(--blue)"><div class="hk-val">9</div><div class="hk-lbl">Functions</div></div>
+        <div class="hkpi" style="border-top-color:#9B7FE8"><div class="hk-val">5</div><div class="hk-lbl">Council Seats</div></div>
+        <div class="hkpi" style="border-top-color:var(--amber-border)"><div class="hk-val">4</div><div class="hk-lbl">Org Layers</div></div>
+        <div class="hkpi" style="border-top-color:#5DCAA5"><div class="hk-val">3</div><div class="hk-lbl">Gov Models</div></div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:16px">
+      <div class="card" style="border-left:4px solid var(--amber-border)">
+        <div style="font-size:10px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Top-Down</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">Mandate-Driven</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.55">Security, Legal, Procurement. Non-negotiable requirements. Blocking gate authority. No exceptions by design.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--blue)">
+        <div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Hybrid</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">Framework-Led</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.55">CoE sets the frame and standards. Teams execute with flexibility within defined guardrails. Strategy and Enablement.</div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--purple-border)">
+        <div style="font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Collaborative</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">Jointly Owned</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.55">Multiple functions co-define and co-execute. Pilots, Reporting, Change Management, and Comms architecture.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-blue">
+      <span class="callout-icon">◈</span>
+      <span>The AI Council is a <strong>unified governance body</strong> — not a committee. It owns decisions, not just recommendations. Security, Legal, and Procurement hold blocking authority on every pilot and vendor onboarding. The One Tool Principle is enforced at the gate, not advised.</span>
+    </div>
+  </div>
+
+  <!-- COUNCIL STRUCTURE -->
+  <div class="page-section" id="structure">
+    <div class="sec-eyebrow">Section 01</div>
+    <div class="sec-title">AI Council Structure</div>
+    <div class="sec-desc">Three tiers of authority — executive sponsorship, core council with gate rights, and an extended operational layer. Each seat has defined decision authority, not just advisory input.</div>
+    <div class="divider"></div>
+
+    <!-- Executive Sponsor -->
+    <div class="council-tier">
+      <div class="council-tier-label">Executive Sponsor</div>
+      <div class="council-row">
+        <div class="council-card" style="background:var(--navy);border-color:rgba(255,255,255,.1)">
+          <div class="cc-badge" style="color:#8CCFFE">Exec Sponsor</div>
+          <div class="cc-title" style="color:#fff">SVP / VP, Solutions</div>
+          <div class="cc-desc" style="color:#8CCFFE">Strategic direction, C-suite AI investment champion, and final escalation authority. Chairs quarterly Council review.</div>
+          <div class="cc-tags">
+            <span class="cc-tag" style="background:rgba(255,255,255,.1);color:#8CCFFE">SVP Solutions</span>
+            <span class="cc-tag" style="background:rgba(255,255,255,.1);color:#8CCFFE">VP Demo Strategy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tier-arrow">↕</div>
+
+    <!-- Core Council -->
+    <div class="council-tier">
+      <div class="council-tier-label">Core Council — Gate Authority</div>
+      <div class="council-row">
+        <div class="council-card" style="border-color:var(--blue);background:var(--lighter)">
+          <div class="cc-badge" style="color:var(--blue)">Strategy</div>
+          <div class="cc-title">AI CoE / Demo Strategy</div>
+          <div class="cc-desc" style="color:var(--muted)">Owns tool roadmap, pilot framework, and gamification model. Sets the standards all other functions align to.</div>
+          <div class="cc-tags">
+            <span class="cc-tag" style="background:var(--light);color:var(--blue3)">Principal Demo Strategist</span>
+          </div>
+        </div>
+        <div class="council-card" style="border-color:var(--amber-border);background:var(--amber-bg)">
+          <div class="cc-badge" style="color:var(--amber)">Security</div>
+          <div class="cc-title">Security & Compliance</div>
+          <div class="cc-desc" style="color:#5A3010">Mandatory gate authority. DLP, data residency, and access controls are non-negotiable. Top-down by design.</div>
+          <div class="cc-tags">
+            <span class="cc-tag" style="background:rgba(184,92,0,.12);color:var(--amber)">Security Lead</span>
+            <span class="cc-tag" style="background:rgba(184,92,0,.12);color:var(--amber)">Compliance</span>
+          </div>
+        </div>
+        <div class="council-card" style="border-color:var(--purple-border);background:var(--purple-bg)">
+          <div class="cc-badge" style="color:var(--purple)">Legal</div>
+          <div class="cc-title">Legal & Risk</div>
+          <div class="cc-desc" style="color:#2A1060">IP, data usage rights, vendor terms, and AI liability review. Blocking authority on vendor approval.</div>
+          <div class="cc-tags">
+            <span class="cc-tag" style="background:rgba(74,46,192,.1);color:var(--purple)">Legal Counsel</span>
+          </div>
+        </div>
+        <div class="council-card" style="border-color:var(--green-border);background:var(--green-bg)">
+          <div class="cc-badge" style="color:var(--green)">Procurement</div>
+          <div class="cc-title">Procurement & Finance</div>
+          <div class="cc-desc" style="color:#0A2A1A">Vendor contracts, cost governance, and token budget allocation. All vendor deals route here.</div>
+          <div class="cc-tags">
+            <span class="cc-tag" style="background:rgba(15,110,86,.1);color:var(--green)">Procurement Lead</span>
+            <span class="cc-tag" style="background:rgba(15,110,86,.1);color:var(--green)">Finance BP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tier-arrow">↕</div>
+
+    <!-- Extended -->
+    <div class="council-tier">
+      <div class="council-tier-label">Extended Council — Operational Layer</div>
+      <div class="council-row">
+        <div class="council-card" style="border-color:var(--border);background:#fff">
+          <div class="cc-badge" style="color:var(--muted)">Enablement</div>
+          <div class="cc-title">SE Enablement</div>
+          <div class="cc-desc" style="color:var(--muted)">AWU certifications, tier progression (T1/T2/T3), CoE skills library, and teach-back programs.</div>
+        </div>
+        <div class="council-card" style="border-color:var(--border);background:#fff">
+          <div class="cc-badge" style="color:var(--muted)">Change Mgmt</div>
+          <div class="cc-title">Change Management</div>
+          <div class="cc-desc" style="color:var(--muted)">Adoption curve, stakeholder comms, resistance handling, and readiness scoring tied to gamification.</div>
+        </div>
+        <div class="council-card" style="border-color:var(--border);background:#fff">
+          <div class="cc-badge" style="color:var(--muted)">Analytics</div>
+          <div class="cc-title">Reporting & Analytics</div>
+          <div class="cc-desc" style="color:var(--muted)">Leaderboard, token dashboards, pilot scorecards, and exec QBR packages. Serves all council seats.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNCTIONS -->
+  <div class="page-section" id="functions">
+    <div class="sec-eyebrow">Section 02</div>
+    <div class="sec-title">Functional Areas & Governance Models</div>
+    <div class="sec-desc">Nine functional areas, each assigned a governance model based on how decisions are made — mandated top-down, framework-led with flexibility, or jointly owned across teams.</div>
+    <div class="divider"></div>
+
+    <div class="legend">
+      <div class="leg-item"><div style="width:10px;height:10px;background:var(--amber-border);border-radius:2px"></div>Top-Down — CoE or Security mandates. No deviation.</div>
+      <div class="leg-item"><div style="width:10px;height:10px;background:var(--blue);border-radius:2px"></div>Hybrid — CoE sets frame. Teams execute within guardrails.</div>
+      <div class="leg-item"><div style="width:10px;height:10px;background:var(--purple-border);border-radius:2px"></div>Collaborative — Jointly owned and co-executed.</div>
+    </div>
+
+    <div class="grid-3">
+      <div class="fn-card" style="border-left-color:var(--blue)">
+        <span class="fn-badge" style="background:var(--light);color:var(--blue)">Hybrid</span>
+        <div class="fn-title">Tools Roadmap & Strategy</div>
+        <div class="fn-desc">CoE defines eval criteria, One Tool Principle, and prioritization. Business units surface needs; CoE curates and sequences adoption.</div>
+        <div class="fn-who"><strong>Owns:</strong> Demo Strategy / AI CoE · <strong>Input:</strong> SE Teams, Product</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--blue)">
+        <span class="fn-badge" style="background:var(--light);color:var(--blue)">Hybrid</span>
+        <div class="fn-title">Enablement</div>
+        <div class="fn-desc">SE Enablement owns delivery. CoE owns the T1/T2/T3 framework, AWU standards, and gamification logic. Skills published to shared library.</div>
+        <div class="fn-who"><strong>Owns:</strong> SE Enablement · <strong>Framework:</strong> AI CoE</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--amber-border)">
+        <span class="fn-badge" style="background:var(--amber-bg);color:var(--amber)">Top-Down</span>
+        <div class="fn-title">Security</div>
+        <div class="fn-desc">Non-negotiable: DLP policies, data residency, access controls, vendor security posture. No pilot proceeds without Security sign-off.</div>
+        <div class="fn-who"><strong>Owns:</strong> Security & Compliance · <strong>Gate:</strong> Mandatory blocking</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--amber-border)">
+        <span class="fn-badge" style="background:var(--amber-bg);color:var(--amber)">Top-Down</span>
+        <div class="fn-title">Procurement & Finance</div>
+        <div class="fn-desc">All vendor contracts route through Procurement. Finance owns token budgets and ROI thresholds. No vendor bypasses this gate.</div>
+        <div class="fn-who"><strong>Owns:</strong> Procurement + Finance BP · <strong>Gate:</strong> Mandatory</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--purple-border)">
+        <span class="fn-badge" style="background:var(--purple-bg);color:var(--purple)">Collaborative</span>
+        <div class="fn-title">Reporting & Analytics</div>
+        <div class="fn-desc">CoE defines KPIs. Analytics builds and maintains leaderboard, token dashboards, and exec QBRs. All council seats consume outputs.</div>
+        <div class="fn-who"><strong>Owns:</strong> Analytics & AI CoE · <strong>Audience:</strong> All seats</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--amber-border)">
+        <span class="fn-badge" style="background:var(--amber-bg);color:var(--amber)">Top-Down</span>
+        <div class="fn-title">Governance</div>
+        <div class="fn-desc">CoE Framework v2.3 is the operating standard. Mandatory gates, fixed SLAs, blocking fields. Advisory guidance is explicitly out of scope.</div>
+        <div class="fn-who"><strong>Owns:</strong> AI CoE · <strong>Enforces:</strong> Council + Legal</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--blue)">
+        <span class="fn-badge" style="background:var(--light);color:var(--blue)">Hybrid</span>
+        <div class="fn-title">Change Management</div>
+        <div class="fn-desc">CoE sets the adoption curve model. Change Mgmt executes comms, readiness assessments, and resistance playbooks tied to gamification milestones.</div>
+        <div class="fn-who"><strong>Owns:</strong> Change Mgmt · <strong>Aligns to:</strong> AI CoE milestones</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--purple-border)">
+        <span class="fn-badge" style="background:var(--purple-bg);color:var(--purple)">Collaborative</span>
+        <div class="fn-title">Pilots</div>
+        <div class="fn-desc">CoE designs the evaluation structure via Pilot-in-a-Box framework. Security, Legal, and Procurement all gate entry. Results feed directly to Reporting.</div>
+        <div class="fn-who"><strong>Owns:</strong> AI CoE · <strong>Gates:</strong> Security, Legal, Procurement</div>
+      </div>
+      <div class="fn-card" style="border-left-color:var(--purple-border)">
+        <span class="fn-badge" style="background:var(--purple-bg);color:var(--purple)">Collaborative</span>
+        <div class="fn-title">Slack & Comms</div>
+        <div class="fn-desc">Channel architecture owned by CoE. Each function has a designated comms lane. No overlapping channels for the same audience — one owner per channel.</div>
+        <div class="fn-who"><strong>Owns:</strong> AI CoE · <strong>Contributors:</strong> All seats</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG OVERLAP -->
+  <div class="page-section" id="overlap">
+    <div class="sec-eyebrow">Section 03</div>
+    <div class="sec-title">Org Overlap: SE · FDE · ProServ · CS</div>
+    <div class="sec-desc">Each org has a distinct AI motion — but there's meaningful overlap in tooling, enablement, and governance. A unified CoE or federated council model removes duplication and creates shared infrastructure where it makes sense.</div>
+    <div class="divider"></div>
+
+    <!-- Org Cards -->
+    <div class="org-grid" style="margin-bottom:18px">
+      <div class="org-col">
+        <div class="org-hdr" style="background:var(--navy)">
+          <div class="org-abbr" style="color:#fff">SE</div>
+          <div class="org-name" style="color:#8CCFFE">Solutions Engineering</div>
+        </div>
+        <div class="org-body">
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Demo automation</div>
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">PoC acceleration</div>
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Prompt engineering</div>
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">AWU tracking</div>
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Objection handling</div>
+          <div class="org-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Pipeline influence reporting</div>
+        </div>
+      </div>
+      <div class="org-col">
+        <div class="org-hdr" style="background:#1A0A50">
+          <div class="org-abbr" style="color:#C5B4F8">FDE</div>
+          <div class="org-name" style="color:#9B7FE8">Fwd. Deploy Engineering</div>
+        </div>
+        <div class="org-body">
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Agent build & config</div>
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Customer LLM tuning</div>
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Prototype → production</div>
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Agentforce deployment</div>
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Token optimization</div>
+          <div class="org-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Technical skill gaps</div>
+        </div>
+      </div>
+      <div class="org-col">
+        <div class="org-hdr" style="background:#2A1800">
+          <div class="org-abbr" style="color:#F5C57A">PS</div>
+          <div class="org-name" style="color:var(--amber-border)">Professional Services</div>
+        </div>
+        <div class="org-body">
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Delivery acceleration</div>
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">AI-assisted scoping</div>
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">SOW automation</div>
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Client enablement kits</div>
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">CSAT + sentiment AI</div>
+          <div class="org-item" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Risk flagging models</div>
+        </div>
+      </div>
+      <div class="org-col">
+        <div class="org-hdr" style="background:#001A10">
+          <div class="org-abbr" style="color:#6FDDAA">CS</div>
+          <div class="org-name" style="color:var(--green-border)">Customer Success</div>
+        </div>
+        <div class="org-body">
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">Renewal intelligence</div>
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">Health score AI</div>
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">Churn prediction</div>
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">QBR content generation</div>
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">Expansion signal mining</div>
+          <div class="org-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#0A2A1A">Success plan automation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlap Matrix -->
+    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em">Capability Overlap Matrix</div>
+    <div class="legend" style="margin-bottom:14px">
+      <div class="leg-item"><span class="o-shared">SHARED</span> Identical need — one tool / one program serves all orgs</div>
+      <div class="leg-item"><span class="o-partial">PARTIAL</span> Overlapping but not identical — coordination needed</div>
+      <div class="leg-item"><span class="o-unique">UNIQUE</span> Org-specific — no cross-org duplication</div>
+    </div>
+
+    <div class="overlap-matrix-wrap">
+      <table class="om">
+        <thead>
+          <tr>
+            <th class="th-area">Capability Area</th>
+            <th>SE</th>
+            <th>FDE</th>
+            <th>ProServ</th>
+            <th>CS</th>
+            <th style="background:#021A40;color:#8CCFFE">CoE Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-area">AI Tool Governance<small>Vendor eval, security gates</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">Unified AI Council owns. One framework for all orgs.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Enablement & Skill Building<small>Prompt eng, AI fluency</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">Core curriculum shared. Org-specific modules layered on top.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Reporting & Analytics<small>KPIs, dashboards, QBR data</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">Unified data layer. Each org gets its own KPI slice.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Pilot Evaluation<small>Vendor scoring, PoC testing</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-nil">—</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">SE + FDE run joint pilots. PS consulted on delivery impact.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Change Management<small>Adoption, readiness</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">One change model. CoE-owned comms cadence across all orgs.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Token & Cost Governance<small>Budget, usage flags</small></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-shared">SHARED</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">Finance owns. One budget model; per-org allocation.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Demo / Content Automation<small>Generative content tools</small></td>
+            <td><span class="o-unique">UNIQUE</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-nil">—</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">SE leads. FDE + CS pull relevant templates only.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Agent Build & Deployment<small>Agentforce, LLM config</small></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-unique">UNIQUE</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-nil">—</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">FDE owns. SE consulted on demo use cases; PS on delivery.</td>
+          </tr>
+          <tr>
+            <td class="td-area">Customer Health & Retention<small>Churn signals, health AI</small></td>
+            <td><span class="o-nil">—</span></td>
+            <td><span class="o-nil">—</span></td>
+            <td><span class="o-partial">PARTIAL</span></td>
+            <td><span class="o-unique">UNIQUE</span></td>
+            <td style="text-align:left;padding-left:10px;font-size:11px;color:#032D60">CS owns. PS informs via delivery signals and risk flags.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="callout callout-blue">
+        <span class="callout-icon">⊛</span>
+        <div><strong>Where a unified CoE wins:</strong> Governance, enablement, and reporting are 100% redundant if each org runs its own. One council, one framework, per-org execution lanes saves cost and removes vendor-shopping risk.</div>
+      </div>
+      <div class="callout callout-amber">
+        <span class="callout-icon">◈</span>
+        <div><strong>Where a federated model is needed:</strong> Demo automation (SE), agent deployment (FDE), and customer health (CS) are org-specific enough that central ownership adds friction. Federated with shared standards is the right call.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RACI MATRIX -->
+  <div class="page-section" id="matrix">
+    <div class="sec-eyebrow">Section 04</div>
+    <div class="sec-title">Cross-Functional RACI Matrix</div>
+    <div class="sec-desc">Who owns, who gates, who contributes, and who's kept informed — across all nine functional areas and every Council seat.</div>
+    <div class="divider"></div>
+
+    <div class="legend">
+      <div class="leg-item"><span class="r-own">OWN</span> Decision authority. Escalation stops here.</div>
+      <div class="leg-item"><span class="r-gate">GATE</span> Mandatory blocking. Cannot proceed without approval.</div>
+      <div class="leg-item"><span class="r-contrib">CONTRIB</span> Active contributor. Work product required.</div>
+      <div class="leg-item"><span class="r-consult">CONSULT</span> Must be consulted before decisions finalize.</div>
+      <div class="leg-item"><span class="r-inform">INFORM</span> Kept in loop. No action required.</div>
+    </div>
+
+    <div class="raci-wrap">
+      <table class="raci">
+        <thead>
+          <tr>
+            <th class="th-fn">Function</th>
+            <th>AI CoE</th><th>Security</th><th>Legal</th><th>Procurement</th>
+            <th>Enablement</th><th>Change Mgmt</th><th>Analytics</th><th>SE Teams</th><th>Exec / VP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="td-fn">Tools Roadmap<small>Vendor eval & prioritization</small></td><td><span class="r-own">OWN</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Enablement<small>T1/T2/T3 & AWUs</small></td><td><span class="r-own">OWN</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-nil">—</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Security<small>DLP, data residency</small></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-gate">GATE</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-nil">—</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Procurement & Finance<small>Contracts & budgets</small></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-consult">CONSULT</span></td><td><span class="r-gate">GATE</span></td><td><span class="r-nil">—</span></td><td><span class="r-nil">—</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-nil">—</span></td><td><span class="r-consult">CONSULT</span></td></tr>
+          <tr><td class="td-fn">Reporting & Analytics<small>Dashboards, QBR</small></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-own">OWN</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Governance<small>CoE Framework v2.3</small></td><td><span class="r-gate">GATE</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-consult">CONSULT</span></td></tr>
+          <tr><td class="td-fn">Change Management<small>Adoption & readiness</small></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-nil">—</span></td><td><span class="r-nil">—</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-own">OWN</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Pilots<small>Vendor eval & scoring</small></td><td><span class="r-own">OWN</span></td><td><span class="r-gate">GATE</span></td><td><span class="r-gate">GATE</span></td><td><span class="r-gate">GATE</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td></tr>
+          <tr><td class="td-fn">Slack & Comms<small>Channel architecture</small></td><td><span class="r-own">OWN</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-own">OWN</span></td><td><span class="r-inform">INFORM</span></td><td><span class="r-contrib">CONTRIB</span></td><td><span class="r-inform">INFORM</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-amber" style="margin-top:14px">
+      <span class="callout-icon">◈</span>
+      <span><strong>Key pattern:</strong> Security, Legal, and Procurement hold GATE on every pilot — all three must approve before a vendor moves to active use. This is the One Tool Principle enforced at the gate, not advised after the fact.</span>
+    </div>
+  </div>
+
+  <!-- GOVERNANCE -->
+  <div class="page-section" id="governance">
+    <div class="sec-eyebrow">Section 05</div>
+    <div class="sec-title">Governance Model & Pilot Lifecycle</div>
+    <div class="sec-desc">Every AI tool passes through a four-gate model before it touches production workflows. Gates are binding — not advisory. The CoE Framework v2.3 is the operating standard.</div>
+    <div class="divider"></div>
+
+    <div class="stages">
+      <div class="stage-box">
+        <div class="stage-hdr" style="background:var(--navy)">
+          <div class="stage-num" style="color:#8CCFFE">Gate 1</div>
+          <div class="stage-name" style="color:#fff">Intake</div>
+        </div>
+        <div class="stage-items" style="border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Slack intake form submitted</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Vendor qual sheet scored</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">One Tool conflict check</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Gemini Gem research run</div>
+          <div class="si" style="background:#D4EEFF;border-left-color:var(--blue2);color:var(--blue3);font-weight:600">→ Min score to proceed</div>
+        </div>
+      </div>
+      <div class="stage-arrow">›</div>
+      <div class="stage-box">
+        <div class="stage-hdr" style="background:#1A0030">
+          <div class="stage-num" style="color:#C5B4F8">Gate 2</div>
+          <div class="stage-name" style="color:#fff">Multi-Party Review</div>
+        </div>
+        <div class="stage-items" style="border:1px solid var(--purple-border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="si" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Security posture (blocking)</div>
+          <div class="si" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Legal IP & data review (blocking)</div>
+          <div class="si" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Procurement contract terms</div>
+          <div class="si" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Finance budget sign-off</div>
+          <div class="si" style="background:#EDE9FF;border-left-color:var(--purple);color:var(--purple);font-weight:600">→ All four seats must approve</div>
+        </div>
+      </div>
+      <div class="stage-arrow">›</div>
+      <div class="stage-box">
+        <div class="stage-hdr" style="background:#2A1800">
+          <div class="stage-num" style="color:#F5C57A">Gate 3</div>
+          <div class="stage-name" style="color:#fff">Pilot</div>
+        </div>
+        <div class="stage-items" style="border:1px solid var(--amber-border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">15-scenario eval run</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Scoring rubric by CoE</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">SE team feedback collected</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Council: adopt / reject / extend</div>
+          <div class="si" style="background:#FFEEDD;border-left-color:var(--amber);color:var(--amber);font-weight:600">→ Binding outcome only</div>
+        </div>
+      </div>
+      <div class="stage-arrow">›</div>
+      <div class="stage-box">
+        <div class="stage-hdr" style="background:#001A10">
+          <div class="stage-num" style="color:#6FDDAA">Post-Decision</div>
+          <div class="stage-name" style="color:#fff">Operationalize</div>
+        </div>
+        <div class="stage-items" style="border:1px solid var(--green-border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="si" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Enablement program built</div>
+          <div class="si" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Gamification milestones set</div>
+          <div class="si" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Dashboard activated</div>
+          <div class="si" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Canvas archived → Permanent</div>
+          <div class="si" style="background:#D6F5E8;border-left-color:var(--green);color:var(--green);font-weight:600">→ Live in leaderboard 30d</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Top-Down — No Flexibility</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Security requirements and DLP standards</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Legal IP review and blocking authority</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">Procurement contract routing</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">CoE Framework gates and SLAs</div>
+          <div class="si" style="background:var(--amber-bg);border-left-color:var(--amber-border);color:#4A2500">One Tool Principle enforcement</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Hybrid — CoE Sets Frame, Teams Execute</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Tool roadmap prioritization and sequencing</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Enablement program design and delivery</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Change management communication cadence</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Pilot scenario selection</div>
+          <div class="si" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Slack channel content governance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="page-section" id="roadmap">
+    <div class="sec-eyebrow">Section 06</div>
+    <div class="sec-title">FY27 Execution Roadmap</div>
+    <div class="sec-desc">Council formation in Q1. Operational infrastructure in Q2. Scaled adoption H2. All nine functional areas sequenced across four quarters.</div>
+    <div class="divider"></div>
+
+    <div class="tl-grid">
+      <div class="tl-col">
+        <div class="tl-hdr" style="background:var(--navy)">
+          <div class="tl-q" style="color:#8CCFFE">Q1 FY27</div>
+          <div class="tl-name" style="color:#fff">Foundation</div>
+        </div>
+        <div class="tl-body" style="border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="tl-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">AI Council charter & seats defined</div>
+          <div class="tl-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">CoE Framework v2.3 ratified</div>
+          <div class="tl-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Security baseline published</div>
+          <div class="tl-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Procurement routing live</div>
+          <div class="tl-item" style="background:var(--light);border-left-color:var(--blue);color:var(--navy)">Slack architecture deployed</div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr" style="background:var(--navy2)">
+          <div class="tl-q" style="color:#8CCFFE">Q2 FY27</div>
+          <div class="tl-name" style="color:#fff">Infrastructure</div>
+        </div>
+        <div class="tl-body" style="border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="tl-item" style="background:#EEF6FF;border-left-color:var(--blue2);color:var(--navy)">Enablement T1/T2/T3 launched</div>
+          <div class="tl-item" style="background:#EEF6FF;border-left-color:var(--blue2);color:var(--navy)">Leaderboard & dashboards live</div>
+          <div class="tl-item" style="background:#EEF6FF;border-left-color:var(--blue2);color:var(--navy)">First pilot cohort through Gates 1–2</div>
+          <div class="tl-item" style="background:#EEF6FF;border-left-color:var(--blue2);color:var(--navy)">Change mgmt assessment run</div>
+          <div class="tl-item" style="background:#EEF6FF;border-left-color:var(--blue2);color:var(--navy)">CoE skills repo published</div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr" style="background:#1A0A50">
+          <div class="tl-q" style="color:#C5B4F8">Q3 FY27</div>
+          <div class="tl-name" style="color:#fff">Scale</div>
+        </div>
+        <div class="tl-body" style="border:1px solid var(--purple-border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="tl-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Second pilot cohort operationalized</div>
+          <div class="tl-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">T3 Multiplier teach-backs active</div>
+          <div class="tl-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Token optimization flags live</div>
+          <div class="tl-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">First QBR exec cycle complete</div>
+          <div class="tl-item" style="background:var(--purple-bg);border-left-color:var(--purple-border);color:var(--purple)">Framework v3.0 drafted</div>
+        </div>
+      </div>
+      <div class="tl-col">
+        <div class="tl-hdr" style="background:#001A10">
+          <div class="tl-q" style="color:#6FDDAA">Q4 FY27</div>
+          <div class="tl-name" style="color:#fff">Optimize</div>
+        </div>
+        <div class="tl-body" style="border:1px solid var(--green-border);border-top:none;border-radius:0 0 10px 10px">
+          <div class="tl-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Framework v3.0 ratified</div>
+          <div class="tl-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Full org T1 certification hit</div>
+          <div class="tl-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">AI impact on CCR/NNAOV reported</div>
+          <div class="tl-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">FY28 tool budget to SVP</div>
+          <div class="tl-item" style="background:var(--green-bg);border-left-color:var(--green-border);color:#003A1A">Council annual review complete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMS -->
+  <div class="page-section" id="comms">
+    <div class="sec-eyebrow">Section 07</div>
+    <div class="sec-title">Slack Channel Architecture</div>
+    <div class="sec-desc">One channel per audience. No overlap. CoE owns the architecture; each function owns its lane. Eight channels across four governance tiers.</div>
+    <div class="divider"></div>
+
+    <div class="slack-grid">
+      <div class="slack-card">
+        <div class="slack-tier">Council / Executive Tier</div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-council</div><div class="ch-desc">Private. Decision records, pilot outcomes, framework updates, escalations. Council seats only.</div><div class="ch-pills"><span class="ch-pill">AI CoE</span><span class="ch-pill">Security</span><span class="ch-pill">Legal</span><span class="ch-pill">Procurement</span><span class="ch-pill">VP+</span></div></div>
+        </div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-coe-pilots</div><div class="ch-desc">Active pilot coordination. Gate status, vendor Q&A threads, scoring updates.</div><div class="ch-pills"><span class="ch-pill">AI CoE</span><span class="ch-pill">Security</span><span class="ch-pill">Legal</span><span class="ch-pill">Procurement</span></div></div>
+        </div>
+      </div>
+
+      <div class="slack-card">
+        <div class="slack-tier">SE Practitioner Tier</div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">se-ai-tools</div><div class="ch-desc">Primary SE community. Tool tips, AWU wins, prompt sharing, leaderboard shoutouts.</div><div class="ch-pills"><span class="ch-pill">All SEs</span><span class="ch-pill">Enablement</span><span class="ch-pill">AI CoE</span></div></div>
+        </div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">se-ai-enablement</div><div class="ch-desc">T1/T2/T3 program updates, AWU announcements, CoE skill releases, teach-back scheduling.</div><div class="ch-pills"><span class="ch-pill">All SEs</span><span class="ch-pill">Enablement</span></div></div>
+        </div>
+      </div>
+
+      <div class="slack-card">
+        <div class="slack-tier">Governance Notifications</div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-governance-updates</div><div class="ch-desc">Read-only broadcast. Framework releases, policy changes, mandatory security updates.</div><div class="ch-pills"><span class="ch-pill">All Solutions Staff</span></div></div>
+        </div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-tool-intake</div><div class="ch-desc">Workflow-triggered intake submissions. Auto-routes to CoE triage. No discussion.</div><div class="ch-pills"><span class="ch-pill">AI CoE Triage</span><span class="ch-pill">Requestors</span></div></div>
+        </div>
+      </div>
+
+      <div class="slack-card">
+        <div class="slack-tier">Analytics & Reporting</div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-leaderboard</div><div class="ch-desc">Weekly digest. Tier promotions, efficiency flags, top AWU performers, trend alerts.</div><div class="ch-pills"><span class="ch-pill">All SEs</span><span class="ch-pill">SE Leaders</span><span class="ch-pill">AI CoE</span></div></div>
+        </div>
+        <div class="ch">
+          <div class="ch-hash">#</div>
+          <div><div class="ch-name">ai-reporting-ops</div><div class="ch-desc">Private. Analytics working channel. Dashboard builds, pipeline issues, exec report prep.</div><div class="ch-pills"><span class="ch-pill">Analytics</span><span class="ch-pill">AI CoE</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-green" style="margin-top:14px">
+      <span class="callout-icon">◈</span>
+      <span><strong>Comms principle:</strong> Every channel has one clear owner, one defined audience, and one content type. If a message could go in two channels, it belongs in the higher governance tier and gets summarized downward.</span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const sections=['overview','structure','functions','overlap','matrix','governance','roadmap','comms'];
+const main=document.getElementById('main-scroll');
+
+function goTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  setActive(id);
+}
+
+function setActive(id){
+  document.querySelectorAll('.nav-link').forEach(a=>{
+    const matches=a.getAttribute('onclick')&&a.getAttribute('onclick').includes("'"+id+"'");
+    a.classList.toggle('active',matches);
+  });
+}
+
+main.addEventListener('scroll',()=>{
+  let current='overview';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      const rect=el.getBoundingClientRect();
+      const mainRect=main.getBoundingClientRect();
+      if(rect.top-mainRect.top<=80)current=id;
+    }
+  });
+  setActive(current);
+},{passive:true});
+</script>
+</body>
+</html>
